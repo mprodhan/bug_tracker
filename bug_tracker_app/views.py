@@ -1,8 +1,9 @@
 from django.shortcuts import render, reverse, HttpResponseRedirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from bug_tracker_app.forms import LoginForm, Registration
-from bug_tracker_app.models import BugTicket
+from django.contrib.auth.decorators import login_required
+from bug_tracker_app.forms import LoginForm, Registration, TicketSubmission
+from bug_tracker_app.models import BugTicket, BugSubmit
 
 def loginview(request):
     if request.method == "POST":
@@ -14,7 +15,7 @@ def loginview(request):
             )
             if user:
                 login(request, user)
-                return HttpResponseRedirect(request.GET.get('next', reverse("homepage"))
+                return HttpResponseRedirect(request.GET.get('next', reverse("submitpage"))
                 )
     form = LoginForm()
     return render(request, "generic_form.html", {"form": form})
@@ -37,4 +38,18 @@ def signupview(request):
                 login(request, user)
                 return HttpResponseRedirect(reverse("loginpage"))
     form = Registration()
+    return render(request, "generic_form.html", {"form": form})
+
+@login_required
+def submissionadd(request):
+    if request.method =="POST":
+        form = TicketSubmission(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            user = BugSubmit.objects.create(
+                title = data["title"],
+                description = data["description"]
+            )
+            return HttpResponseRedirect(reverse("homepage"))
+    form = TicketSubmission()
     return render(request, "generic_form.html", {"form": form})
