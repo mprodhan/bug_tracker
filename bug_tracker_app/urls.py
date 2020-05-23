@@ -3,5 +3,6 @@ from bug_tracker_app import views
 
 urlpatterns = [
     path("login/", views.loginview, name="loginpage"),
-    path("logout/", views.logoutview)
+    path("logout/", views.logoutview),
+    path("signup/", views.signupview)
 ]

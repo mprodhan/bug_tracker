@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+
 
 class BugTicket(models.Model):
     number = models.AutoField(primary_key=True)
@@ -19,3 +20,9 @@ class BugSubmit(models.Model):
 
     def __str__(self):
         return self.title
+
+# class BugProfile(AbstractUser):
+#    display_name = models.CharField(max_length = 30)
+
+#     def __str__(self):
+#         return self.display_name
