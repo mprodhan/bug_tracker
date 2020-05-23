@@ -35,6 +35,6 @@ def signupview(request):
             )
             if user:
                 login(request, user)
-                return HttpResponseRedirect(reverse("homepage"))
+                return HttpResponseRedirect(reverse("loginpage"))
     form = Registration()
     return render(request, "generic_form.html", {"form": form})
