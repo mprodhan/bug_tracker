@@ -9,6 +9,7 @@ class Registration(forms.Form):
     name = forms.CharField(max_length=30)
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
+    display_name = forms.CharField(max_length=30)
 
 class TicketSubmission(forms.Form):
     title = forms.CharField(max_length=60)

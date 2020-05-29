@@ -1,0 +1,7 @@
+<h1>Please log in here to submit an issue to be resolved</h1>
+
+<form action="/login/" method = "POST">
+    {% csrf_token %}
+    {{form.as_p}}
+<input type="submit" value="Login">
+</form>

@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from bug_tracker_app.forms import LoginForm, Registration, TicketSubmission
-from bug_tracker_app.models import BugTicket, BugSubmit
+from bug_tracker_app.models import BugTicket, BugProfile
 
 def loginview(request):
     if request.method == "POST":
@@ -15,10 +15,10 @@ def loginview(request):
             )
             if user:
                 login(request, user)
-                return HttpResponseRedirect(request.GET.get('next', reverse("submitpage"))
+                return HttpResponseRedirect(reverse("submissionpage")
                 )
     form = LoginForm()
-    return render(request, "generic_form.html", {"form": form})
+    return render(request, "loginpage.html", {"form": form})
 
 def logoutview(request):
     logout(request)
@@ -29,16 +29,17 @@ def signupview(request):
         form = Registration(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            user = BugTicket.objects.create_user(
+            user = Registration.objects.create_user(
                 name = data["name"],
-                username = data["name"],
+                username = data["username"],
                 password = data["password"],
+                display_name = data["display_name"]
             )
             if user:
                 login(request, user)
                 return HttpResponseRedirect(reverse("loginpage"))
     form = Registration()
-    return render(request, "generic_form.html", {"form": form})
+    return render(request, "signup.html", {"form": form})
 
 @login_required
 def submissionadd(request):
@@ -46,10 +47,15 @@ def submissionadd(request):
         form = TicketSubmission(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            user = BugSubmit.objects.create(
+            user = BugTicket.objects.create(
                 title = data["title"],
                 description = data["description"]
             )
             return HttpResponseRedirect(reverse("homepage"))
     form = TicketSubmission()
     return render(request, "generic_form.html", {"form": form})
+
+@login_required
+def submitview(request, id):
+    ticket = BugTicket.objects.all()
+    return render(request, "main.html", {"ticket": ticket})
